@@ -1,0 +1,51 @@
+<div class="main-flex" ng-controller="UserController">
+    <form class="form-horizontal">
+        <input type="hidden" name="user_name" value="{{data.user.username}}">
+        <input type="hidden" name="user_sign" value="{{data.user.password}}">
+        <input type="hidden" name="user_email" value="{{data.user.email}}">
+        <div class="form-group">
+            <label for="inputUserName" class="col-sm-2 control-label">用户：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputUserName" placeholder="用户名称"
+                       ng-model="data.user.username">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword" class="col-sm-2 control-label">密码：</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword" ng-model="data.user.password">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail" class="col-sm-2 control-label">E-Mail：</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control" id="inputEmail" placeholder="电子邮件"
+                       ng-model="data.user.email">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="bs-callout bs-callout-info">
+                    <ul class="reset-ul">
+                        <li>1、此处填写的信息用于持久化使用</li>
+                        <li>2、如果需要将此页面内容展现到其他设备，请填写</li>
+                        <li>3、如果其他设备数据需要穿越，请填写此认证信息</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" ng-click="submitSign()">Sign</button>
+            </div>
+        </div>
+    </form>
+    <!-- modal 不能写到index.html 中，因为 相关 $scope 不在 $rootScope 中，若 $scope 移至 $rootScope 就可以 -->
+    <!--<div ng-include="'views/partials/bs-modal.html'"></div>-->
+    <!--<div ng-include="'views/partials/bs-modal-with-cancel.html'"></div>-->
+
+
+    <tpl-footer></tpl-footer>
+
+</div>

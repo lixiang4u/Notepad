@@ -1,0 +1,93 @@
+<div ng-controller="EditorController" ng-init="initEditorContent()">
+    <div id="notepadBody" class="notepadBody" contenteditable="true" ng-keyup="log()"></div>
+
+    <style type="text/css">
+        .tools {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e616b;
+        }
+
+        .tools > .tools-item > i {
+            margin: 14px 0 0 12px;
+        }
+
+        .tools-item {
+            width: 50px;
+            height: 50px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: #777777;
+        }
+
+        .tools-item a {
+            width: 100%;
+            height: 100%;
+            display: inline-block;
+        }
+
+        .tools-item i:hover {
+            color: #e2e2e2;
+        }
+
+        .tools i {
+            margin: 15px 0 0 16px;
+            color: #ffffff;
+            font-size: 22px;
+        }
+
+        .tools-item-list {
+            margin: -206px 0 0 -55px;
+            width: 180px;
+            height: 200px;
+        }
+
+        .tools-item-list .tools-item:nth-child(1) {
+            background: orange;
+        }
+
+        .tools-item-list .tools-item:nth-child(2) {
+            background: #2b542c;
+            margin: 0 0 0 24px;
+        }
+
+        .tools-item-list .tools-item:nth-child(2) i {
+            margin: 15px 0 0 14px;
+        }
+
+        .tools-item-list .tools-item:nth-child(3) {
+            background: green;
+            margin: 2px 0 0 44px;
+        }
+
+        .tools-item-list .tools-item:nth-child(3) i {
+            margin: 14px 0 0 13px;
+        }
+
+
+    </style>
+    <div id="tools" class="tools tools-item">
+        <div class="tools-item" ng-click="hiddenToolbar=!hiddenToolbar" title="tools">
+            <i class="fa fa-cogs" aria-hidden="true"></i>
+        </div>
+        <!--<i class="fa fa-ellipsis-v fa-2x" aria-hidden="true"></i>-->
+        <div class="tools-item-list" ng-class="{'hidden':hiddenToolbar}">
+            <div class="tools-item" title="create a new note session." ng-click="submitCreateNewNoteSession()">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+            </div>
+            <div class="tools-item" title="show note list." ng-click="">
+                <a href="#/note/list">
+                    <i class="fa fa-th-list" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div class="tools-item" title="share this to friends." ng-click="submitTransEdit()">
+                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            </div>
+        </div>
+    </div>
+
+
+    <tpl-footer></tpl-footer>
+
+</div>

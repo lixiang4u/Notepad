@@ -1,0 +1,75 @@
+<div class="main-flex" ng-controller="UserController">
+    <form class="form-horizontal" ng-if="!user.username">
+        <input type="hidden" name="user_name" value="{{data.user.username}}">
+        <input type="hidden" name="user_sign" value="{{data.user.password}}">
+        <div class="form-group">
+            <label for="inputUserName" class="col-sm-2 control-label">用户：</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputUserName" placeholder="用户名称"
+                       ng-model="data.user.username">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword" class="col-sm-2 control-label">密码：</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" id="inputPassword" ng-model="data.user.password">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="bs-callout bs-callout-info">
+                    尚未拥有可穿越的账户？点击这里 <a href="#/sign">注册</a> 试试。
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" ng-click="submitLogin()">登陆</button>
+            </div>
+        </div>
+    </form>
+
+    <div ng-if="user.username">
+        <div class="bs-callout bs-callout-info">
+            <ul class="reset-ul">
+                <li>
+                    <i class="fa fa-user" aria-hidden="true"></i>
+                    <b>{{user.username}}</b>
+                    为当前已登陆用户！
+                </li>
+            </ul>
+        </div>
+        <div class="bs-callout bs-callout-warning">
+            <ul class="reset-ul">
+                <li>暂未完成头像修改</li>
+            </ul>
+        </div>
+        <div class="bs-callout bs-callout-warning">
+            <ul class="reset-ul">
+                <li>暂未完成注册邮件绑定</li>
+            </ul>
+        </div>
+        <div class="bs-callout bs-callout-info">
+            <ul class="reset-ul">
+                <li>
+                    <a href="https://notepad.lixiang4u.me/Notepad.tgz">
+                        <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                        Notepad
+                    </a>
+                    项目git目前为私有，文件已打包
+
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- modal 不能写到index.html 中，因为 相关 $scope 不在 $rootScope 中，若 $scope 移至 $rootScope 就可以 -->
+    <!--<div ng-include="'views/partials/bs-modal.html'"></div>-->
+    <!--<div ng-include="'views/partials/bs-modal-with-cancel.html'"></div>-->
+
+
+    <tpl-footer></tpl-footer>
+
+</div>

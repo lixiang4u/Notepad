@@ -1,0 +1,46 @@
+<div ng-controller="EditorController" ng-init="initEditorList()">
+
+    <style type="text/css">
+        .bs-callout {
+            max-height: 280px;
+        }
+    </style>
+    <div class="main-flex overflow">
+        <div class="bs-callout bs-callout-info" ng-repeat="note in data.noteList">
+            <ul class="reset-ul">
+                <li>
+                    <b>{{ $index + 1 }}、{{note.title}} </b>&nbsp;&nbsp;
+                    更新于：{{note.updatedAt}}&nbsp;&nbsp;
+                    <a href="#/editor/{{note.objectId}}"><i class="fa fa-share" aria-hidden="true"></i></a>&nbsp;&nbsp;
+                    <a href="javascript:void(0);" ng-click="removeNoteConfirm(note.objectId)"><i class="fa fa-times" aria-hidden="true"></i></a>
+                </li>
+                <li>
+                    <hr/>
+                </li>
+                <li>
+                    <div ng-bind-html="note.content"></div>
+                </li>
+            </ul>
+        </div>
+
+        <ul class="pagination ">
+            <li>
+                <a href="javascript:void(0);" ng-click="turnPageSearch(false)" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;&nbsp;往前</span>
+                </a>
+            </li>
+            <!--<li>-->
+                <!--<a href="javascript:void(0);">当前第{{page}}页</a>-->
+            <!--</li>-->
+            <li>
+                <a href="javascript:void(0);" ng-click="turnPageSearch(true)" aria-label="Next">
+                    <span aria-hidden="true">往后&nbsp;&raquo;</span>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+
+    <tpl-footer></tpl-footer>
+
+</div>
