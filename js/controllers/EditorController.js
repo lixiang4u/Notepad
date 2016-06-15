@@ -4,12 +4,13 @@
 
 angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', '$http', 'BmobUserService', 'BmobEditorService', '$sce', '$stateParams', '$q', function ($scope, $rootScope, $http, BmobUserService, BmobEditorService, $sce, $stateParams, $q) {
 
-    var pageSize = 10;
+    var pageSize = 5;
     var notepadBody = document.querySelector('#notepadBody');
 
     $scope.data = {
         //缓存note列表使用，在list页面
-        noteList: []
+        noteList: [],
+        currentPage: 1
     };
 
     $scope.hiddenToolbar = true;
@@ -29,16 +30,22 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
      * 写数据到 localStorage
      */
     $scope.log = function () {
-        localStorage['NotepadData'] = notepadBody.innerHTML;
+        localStorage['notepadContent'] = notepadBody.innerHTML;
     };
 
     $scope.initEditorContent = function () {
-        var objId = $stateParams.objId;
-        if (objId) {
+        $scope.objId = $stateParams.objId;
+        //如果不是带objId的记事，则查找localStorage，得到记事后设置objId到localStorage
+        //1、初始化 objId 的值，
+        //2、根据 objId 去显示界面
+        if (!$scope.objId && localStorage['notepadId']) {
+            $scope.objId = localStorage['notepadId'];
+        }
+        if ($scope.objId) {
             //去数据库找
-            BmobEditorService.findNote(objId).then(function (result) {
-                $scope.objId = objId;
+            BmobEditorService.findNote($scope.objId).then(function (result) {
                 notepadBody.innerHTML = result.get('content');
+                localStorage['notepadContent'] = result.get('content');
             }, function (error) {
                 notepadBody.innerHTML = error['message'];
             }, function (progress) {
@@ -46,12 +53,13 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
                 //$scope.show = false;
             });
         } else {
+            //5月份，薛仁青
             var currentUser = BmobUserService ? BmobUserService.getCurrentUser() : [];
             if (currentUser['id'] && currentUser['username']) {
                 $scope.fillLastEdit(currentUser['id']);
             } else {
-                if (localStorage['NotepadData']) {
-                    notepadBody.innerHTML = localStorage['NotepadData'];
+                if (localStorage['notepadContent']) {
+                    notepadBody.innerHTML = localStorage['notepadContent'];
                 } else {
                     notepadBody.innerHTML = '尚未创建任何记事！';
                 }
@@ -59,14 +67,19 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
             }
             //提示空
             //notepadBody.innerHTML='这里什么也找不到';
-            //notepadBody.innerHTML = localStorage['NotepadData'];
+            //notepadBody.innerHTML = localStorage['notepadContent'];
         }
     };
 
     $scope.fillLastEdit = function ($objUid) {
         //findLastNote
         BmobEditorService.findLastNote($objUid).then(function (ngNote) {
-            notepadBody.innerHTML = ngNote.get('content');
+            if (ngNote) {
+                notepadBody.innerHTML = ngNote.get('content');
+                localStorage['notepadId'] = ngNote.id;
+                localStorage['notepadContent'] = ngNote.get('content');
+                $scope.objId = ngNote.id;
+            }
         }, function (error) {
             notepadBody.innerHTML = error['message'];
         }, function (progress) {
@@ -182,6 +195,7 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
         if ($stateParams && $stateParams.hasOwnProperty('page')) {
             page = parseInt($stateParams.page);
             offset = (page - 1) * pageSize;
+            $scope.data.currentPage = page;
         }
 
         //获取用户信息
@@ -284,10 +298,13 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
         if ($stateParams && $stateParams.hasOwnProperty('page')) {
             page = parseInt($stateParams.page);
         }
+        //根据当前页面有没有数据，page 值是否小于 1 等情况，计算新 page 的值
         if (isNext) {
-            page = page + 1;
+            if ($scope.data.noteList.length) {
+                page = page + 1;
+            }
         } else {
-            page = page = 1;
+            page = page > 1 ? (page - 1) : 1;
         }
         location.href = '#/note/list/' + page;
     };

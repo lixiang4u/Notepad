@@ -69,7 +69,7 @@ angular.module('ngApp').controller('UserController', ['$scope', '$rootScope', '$
     };
 
     $scope.submitLogout = function () {
-        delete localStorage['NotepadData'];
+        delete localStorage['notepadContent'];
         Bmob.User.logOut();
         location.href = "#/";
     };

@@ -9,11 +9,11 @@ angular.module('ngApp').controller('AppController', ['$scope', function ($scope)
      * 写数据到 localStorage
      */
     $scope.log = function () {
-        localStorage['NotepadData'] = notepadBody.innerHTML;
+        localStorage['notepadContent'] = notepadBody.innerHTML;
     };
 
     $scope.init = function () {
-        notepadBody.innerHTML = localStorage['NotepadData'];
+        notepadBody.innerHTML = localStorage['notepadContent'];
     }
 
 }]);
