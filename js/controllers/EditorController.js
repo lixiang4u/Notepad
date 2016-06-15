@@ -4,7 +4,7 @@
 
 angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', '$http', 'BmobUserService', 'BmobEditorService', '$sce', '$stateParams', '$q', function ($scope, $rootScope, $http, BmobUserService, BmobEditorService, $sce, $stateParams, $q) {
 
-    var pageSize = 5;
+    var pageSize = 10;
     var notepadBody = document.querySelector('#notepadBody');
 
     $scope.data = {
@@ -35,12 +35,6 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
 
     $scope.initEditorContent = function () {
         $scope.objId = $stateParams.objId;
-        //如果不是带objId的记事，则查找localStorage，得到记事后设置objId到localStorage
-        //1、初始化 objId 的值，
-        //2、根据 objId 去显示界面
-        if (!$scope.objId && localStorage['notepadId']) {
-            $scope.objId = localStorage['notepadId'];
-        }
         if ($scope.objId) {
             //去数据库找
             BmobEditorService.findNote($scope.objId).then(function (result) {
@@ -53,22 +47,21 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
                 //$scope.show = false;
             });
         } else {
-            //5月份，薛仁青
-            var currentUser = BmobUserService ? BmobUserService.getCurrentUser() : [];
-            if (currentUser['id'] && currentUser['username']) {
-                $scope.fillLastEdit(currentUser['id']);
-            } else {
-                if (localStorage['notepadContent']) {
-                    notepadBody.innerHTML = localStorage['notepadContent'];
-                } else {
-                    notepadBody.innerHTML = '尚未创建任何记事！';
-                }
-                console.log('[NO USER]');
-            }
-            //提示空
-            //notepadBody.innerHTML='这里什么也找不到';
-            //notepadBody.innerHTML = localStorage['notepadContent'];
+            $scope.getSomething();
         }
+    };
+
+    $scope.getSomething = function () {
+        $http.get('http://zyfree.acman.cn/').then(function ($response) {
+            if ($response && $response.hasOwnProperty('data')) {
+                notepadBody.innerHTML = '<i class="fa fa-quote-left" aria-hidden="true"></i> ' + $response['data']['zhaiyan'] + ' <i class="fa fa-quote-right" aria-hidden="true"></i> -- ' + ($response['data']['show'] ? $response['data']['show'] + '  ' : '') + "" + $response['data']['source'];
+            } else {
+                notepadBody.innerHTML = '<i class="fa fa-quote-left" aria-hidden="true"></i> 还有什么值得我们再去探问！ <i class="fa fa-quote-right" aria-hidden="true"></i> -- 曾经相爱那么深';
+            }
+        }, function ($response) {
+            console.log('[Get default Juzi error]', $response);
+            notepadBody.innerHTML = '<i class="fa fa-quote-left" aria-hidden="true"></i> 还有什么值得我们再去探问！ <i class="fa fa-quote-right" aria-hidden="true"></i> -- 曾经相爱那么深';
+        });
     };
 
     $scope.fillLastEdit = function ($objUid) {
@@ -127,7 +120,7 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
                     $rootScope.modal.title = '完成';
                     $rootScope.modal.isModalOkShow = false;
 
-                    href = href + '/' + $scope.objId;
+                    href = $scope.getHref() + '#/editor/' + $scope.objId;
                     $rootScope.modal.msg = '请点击继续。<a target="_blank" href="' + href + '">' + href + '</a>';
                 }, function (error) {
                     $rootScope.modal.id = '';
@@ -144,7 +137,7 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
                 $rootScope.modal.title = '完成';
                 $rootScope.modal.isModalOkShow = false;
 
-                //href = href + '/' + $scope.objId;
+                href = $scope.getHref() + '#/editor/' + $scope.objId;
                 $rootScope.modal.msg = '请点击继续。<a target="_blank" href="' + href + '">' + href + '</a>';
             }
         } else {
@@ -163,7 +156,7 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
                     $rootScope.modal.title = '完成';
                     $rootScope.modal.isModalOkShow = false;
 
-                    href = href + '/' + $scope.objId;
+                    href = $scope.getHref() + '#/editor/' + $scope.objId;
                     $rootScope.modal.msg = '请点击继续。<a target="_blank" href="' + href + '">' + href + '</a>';
                 }, function (error) {
                     $rootScope.modal.id = '';
@@ -185,6 +178,15 @@ angular.module('ngApp').controller('EditorController', ['$scope', '$rootScope', 
         }
         $('#myModal').modal({keyboard: true});
 
+    };
+
+    $scope.getHref = function () {
+        var href = location.href;
+        var tmpArr = href.split('#');
+        if (tmpArr.length > 1) {
+            href = tmpArr[0];
+        }
+        return href;
     };
 
     $scope.initEditorList = function () {

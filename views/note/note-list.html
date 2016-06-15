@@ -14,10 +14,11 @@
         <div class="bs-callout bs-callout-info" ng-repeat="note in data.noteList">
             <ul class="reset-ul">
                 <li>
-                    <b>{{ $index + 1 }}、<i class="fa fa-calendar" aria-hidden="true"></i> {{note.updatedAt}}</b>&nbsp;&nbsp;
+                    <b>
+                        <i class="fa fa-hashtag" aria-hidden="true"></i>{{ $index + 1 }}、<i class="fa fa-calendar" aria-hidden="true"></i> {{note.createdAt}}</b>&nbsp;&nbsp;
                     <a href="#/editor/{{note.objectId}}" title="查看">
-                        <i class="fa fa-share" aria-hidden="true"></i>
-                    </a>&nbsp;&nbsp;
+                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </a>&nbsp;
                     <a href="javascript:void(0);" title="删除" ng-click="removeNoteConfirm(note.objectId)">
                         <i class="fa fa-trash" aria-hidden="true"></i>
                     </a>
